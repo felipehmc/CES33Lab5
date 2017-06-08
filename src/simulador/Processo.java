@@ -5,20 +5,18 @@ public class Processo {
 	int CPUCriadora;
 	int horaCriacao;
 	int tempoDeCPU;
-	int tempoRestanteDeCPU;
-	boolean finalizado;
+	int clocksRestantesDeCPU;
 	
 	Processo(int CPU, int hora, int tempo){
 		CPUCriadora = CPU;
 		horaCriacao = hora;
 		tempoDeCPU = tempo;
-		tempoRestanteDeCPU = tempo;
-		finalizado = false;
+		clocksRestantesDeCPU = tempo;
 	}
 	
 	public boolean clock(){
-		tempoRestanteDeCPU--;
-		if(tempoRestanteDeCPU > 1)
+		clocksRestantesDeCPU--;
+		if(clocksRestantesDeCPU > 1)
 			return false;
 		return true; // retorna true quando o processo eh finalizado
 	}

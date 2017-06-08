@@ -7,8 +7,8 @@ public class MetricaQtdProcessos implements IMetrica {
 		limite = _limite;
 	}
 	
-	public boolean estaSobrecarregado(Node node, int processosEmExecucao) {
-		if((double)node.quantidadeProcessos() > limite)
+	public boolean estaSobrecarregado(CPU cpu, int processosEmExecucao) {
+		if((double)cpu.quantidadeProcessos() > limite)
 			return true;
 		return false;
 	}

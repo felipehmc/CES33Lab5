@@ -3,48 +3,41 @@ package simulador;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class HReceptor {
-
-	public int processosEmExecucao;
-	int retry;
-	int limiteClocksOciosos;
-	IMetrica metrica;
+public class HReceptor extends Heuristica{
+	
 	Random random = new Random();
 	
-	ArrayList <Node> nodes = new ArrayList<Node>();
-	
-	HReceptor(int _limiteClocksOciosos, IMetrica _metrica, int _retry){
-		limiteClocksOciosos = _limiteClocksOciosos;
-		metrica = _metrica;
-		retry = _retry;
+	HReceptor(int _limiteClocksOciosos, IMetrica _metrica, int _retry, ArrayList <CPU> _cpus){
+		super(_limiteClocksOciosos,_metrica,_retry,_cpus);
 	}
 	
 	public int geraNumeroAleatorio(int num){
-		int numGerado = random.nextInt(nodes.size());
+		int numGerado = random.nextInt(cpus.size());
 		while(numGerado == num){
-			numGerado = random.nextInt(nodes.size());
+			numGerado = random.nextInt(cpus.size());
 		}
 		return numGerado;
 	}
 	
-	public void clock(){
-		boolean[] terminouProcesso = new boolean[nodes.size()];
-		for(int i = 0; i < nodes.size(); i++){
-			terminouProcesso[i] = nodes.get(i).executaClock();
+	public int clock(){
+		boolean[] terminouProcesso = new boolean[cpus.size()];
+		for(int i = 0; i < cpus.size(); i++){
+			terminouProcesso[i] = cpus.get(i).executaClock();
 		}
-		for(int i = 0; i < nodes.size(); i++){
-			if(terminouProcesso[i] || nodes.get(i).clocksOciosos >= limiteClocksOciosos){
-				heuristicaDoReceptor(nodes.get(i), metrica);
+		for(int i = 0; i < cpus.size(); i++){
+			if(terminouProcesso[i] || cpus.get(i).clocksOciosos >= limiteClocksOciosos){
+				heuristicaDoReceptor(cpus.get(i), metrica);
 			}
 		}
+		return ++currentClock;
 	}
 		
-	public void heuristicaDoReceptor(Node node, IMetrica metrica){
+	public void heuristicaDoReceptor(CPU node, IMetrica metrica){
 		if(!metrica.estaSobrecarregado(node,processosEmExecucao)){
 			int tentativas = 0;
 			while(tentativas < retry){
 				int randomCPU = geraNumeroAleatorio(node.getID());
-				Node randomNode = nodes.get(randomCPU);
+				CPU randomNode = cpus.get(randomCPU);
 				if(metrica.estaSobrecarregado(randomNode,processosEmExecucao)&& randomNode.quantidadeProcessos() > 1){
 					Processo p = randomNode.ultimoProcesso();
 					node.addProcesso(p);
@@ -54,9 +47,5 @@ public class HReceptor {
 			}
 		}
 		node.clocksOciosos = 0;
-	}
-	
-	public static void main(String[] args) {
-		
 	}
 }

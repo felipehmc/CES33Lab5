@@ -2,17 +2,22 @@ package simulador;
 
 import java.util.ArrayList;
 
-public class Node {
+public class CPU {
 
 	private ArrayList<Processo> processos;
 	private final int id;
 	private int tempoRestanteTotal;
 	public int clocksOciosos = 0; // Mede o tempo de ociosidade
 	
-	Node(int id){
+	CPU(int id){
 		this.id = id;
 		tempoRestanteTotal = 0;
 		processos = new ArrayList <Processo>();
+	}
+	
+	public void criaNovoProcesso(int currentClock, int clocksDuracao){
+		Processo p = new Processo(this.id, currentClock, clocksDuracao);
+		addProcesso(p);
 	}
 	
 	public double taxaMediaDeUtilizacao(){
@@ -21,12 +26,12 @@ public class Node {
 	
 	public void addProcesso(Processo p){
 		processos.add(p);
-		tempoRestanteTotal += p.tempoRestanteDeCPU;
+		tempoRestanteTotal += p.clocksRestantesDeCPU;
 	}
 	
 	public void removeProcesso(Processo p){
 		processos.remove(p);
-		tempoRestanteTotal -= p.tempoRestanteDeCPU;
+		tempoRestanteTotal -= p.clocksRestantesDeCPU;
 	}
 	
 	public int quantidadeProcessos(){
@@ -52,7 +57,7 @@ public class Node {
 				tempoRestanteTotal--;
 			if(processos.get(0).clock()){
 				processos.remove(0);
-				return true; // retorna-se true quando o processo eh finalizado
+				return true; // retorna true quando o processo eh finalizado
 			}
 		}
 		clocksOciosos++;

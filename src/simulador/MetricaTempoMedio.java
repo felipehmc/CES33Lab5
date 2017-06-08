@@ -8,8 +8,8 @@ public class MetricaTempoMedio implements IMetrica {
 	}
 	
 	@Override
-	public boolean estaSobrecarregado(Node node, int processosEmExecucao) {
-		if((double)node.quantidadeProcessos()/processosEmExecucao > limite)
+	public boolean estaSobrecarregado(CPU cpu, int processosEmExecucao) {
+		if((double)cpu.quantidadeProcessos()/processosEmExecucao > limite)
 			return true;
 		return false;
 	}

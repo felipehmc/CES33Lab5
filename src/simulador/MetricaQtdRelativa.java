@@ -8,8 +8,8 @@ public class MetricaQtdRelativa implements IMetrica{
 		limite = _limite;
 	}
 	
-	public boolean estaSobrecarregado(Node node, int processosEmExecucao){
-		if(node.taxaMediaDeUtilizacao() > limite)
+	public boolean estaSobrecarregado(CPU cpu, int processosEmExecucao){
+		if(cpu.taxaMediaDeUtilizacao() > limite)
 			return true;
 		return false;
 	}
