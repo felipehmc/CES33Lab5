@@ -48,19 +48,20 @@ public class HEmissor extends Heuristica{
 		
 	public void heuristicaDoEmissor(CPU cpu, IMetrica metrica){
 		int tentativas = 0;
-		while(tentativas < retry){
-			
-			tentativas++;
-			int randomCPUindex = geraNumeroAleatorio(cpu.getID());
-			CPU randomCPU = cpus.get(randomCPUindex);
-			randomCPU.sondagensRecebidas++;
-			if(!metrica.estaSobrecarregado(randomCPU,processosEmExecucao)&& cpu.quantidadeProcessos()>1){
-				Processo p = cpu.ultimoProcesso();
-				randomCPU.addProcesso(p);
-				break;	
+		if(metrica.estaSobrecarregado(cpu,processosEmExecucao)){
+			while(tentativas < retry){
+				tentativas++;
+				int randomCPUindex = geraNumeroAleatorio(cpu.getID());
+				CPU randomCPU = cpus.get(randomCPUindex);
+				randomCPU.sondagensRecebidas++;
+				if(!metrica.estaSobrecarregado(randomCPU,processosEmExecucao)&& cpu.quantidadeProcessos()>1){
+					Processo p = cpu.ultimoProcesso();
+					randomCPU.addProcesso(p);
+					break;	
+				}
 			}
+			cpu.sondagensTransmitidas += tentativas;
 		}
-		cpu.sondagensTransmitidas += tentativas;
 	}
 }
 

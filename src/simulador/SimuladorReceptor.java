@@ -63,9 +63,9 @@ public class SimuladorReceptor {
 	}
 	
 	public static void main(String[] args){
-		int qtdCPUS = 4;
-		int TMT = 30;
-		int qtdProcessos = 20;
+		int qtdCPUS = 32;
+		int TMT = 30; 
+		int qtdProcessos = 100 ;
 		int LIM_CLOCKS_OCIOSOS = 5;
 		int RETRY = 5;
 		
@@ -74,7 +74,7 @@ public class SimuladorReceptor {
 			multiprocessadores.add(i, new CPU(i));
 		}
 		
-		Heuristica heuristica = new HReceptor(LIM_CLOCKS_OCIOSOS, new MetricaQtdProcessos(5), RETRY, multiprocessadores); 
+		Heuristica heuristica = new HReceptor(LIM_CLOCKS_OCIOSOS, new MetricaQtdProcessos(10), RETRY, multiprocessadores); 
 		SimuladorReceptor sim = new SimuladorReceptor(qtdCPUS, TMT, qtdProcessos, heuristica);
 		
 		//Heuristica heuristica2 = new HReceptor(LIM_CLOCKS_OCIOSOS, new MetricaTempoMedio(60), RETRY, multiprocessadores); 
