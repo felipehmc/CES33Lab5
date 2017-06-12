@@ -1,14 +1,20 @@
-package simulador;
+package Simulador3;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class SimuladorReceptor {
+import simulador.CPU;
+import simulador.HReceptor;
+import simulador.Heuristica;
+import simulador.MetricaQtdProcessos;
+
+public class SimuladorHibrido {
 	int DURATION = 100;
 	int TMT;
 	int amount;
 	int qtdCPUS;
 	Heuristica heuristica;
+	
 	Random random = new Random();
 	
 	public int geraNumeroAleatorio(int num){
@@ -32,7 +38,7 @@ public class SimuladorReceptor {
 		return indices_cpus_para_novos_processos;
 	}
 	
-	SimuladorReceptor(int _qtdCPUS ,int _TMT, int _qtdProcessos, Heuristica _heuristica){
+	SimuladorHibrido(int _qtdCPUS ,int _TMT, int _qtdProcessos, Heuristica _heuristica){
 		TMT = _TMT;
 		amount = _qtdProcessos;
 		qtdCPUS = _qtdCPUS; 
@@ -54,6 +60,7 @@ public class SimuladorReceptor {
 				int [] cpuAleatorias = gerarCPUSAleatorias(_amount);
 				for(int i = 0; i < _amount; i++){
 					heuristica.cpus.get(cpuAleatorias[i]).criaNovoProcesso(heuristica.currentClock, temposAleatorios[i]);
+					heuristica.cpus.get(cpuAleatorias[i]).criouNovoProcesso = true;
 					//System.out.println("Gerou processo de "+ temposAleatorios[i] + " em CPU " + cpuAleatorias[i]);
 					heuristica.processosEmExecucao++;
 				}
@@ -74,8 +81,8 @@ public class SimuladorReceptor {
 			multiprocessadores.add(i, new CPU(i));
 		}
 		
-		Heuristica heuristica = new HReceptor(LIM_CLOCKS_OCIOSOS, new MetricaQtdProcessos(5), RETRY, multiprocessadores); 
-		SimuladorReceptor sim = new SimuladorReceptor(qtdCPUS, TMT, qtdProcessos, heuristica);
+		Heuristica heuristica = new HHibrido(LIM_CLOCKS_OCIOSOS, new MetricaQtdProcessos(5), RETRY, multiprocessadores); 
+		SimuladorHibrido sim = new SimuladorHibrido(qtdCPUS, TMT, qtdProcessos, heuristica);
 		
 		//Heuristica heuristica2 = new HReceptor(LIM_CLOCKS_OCIOSOS, new MetricaTempoMedio(60), RETRY, multiprocessadores); 
 		//Simulador sim = new Simulador(qtdCPUS, TMT, qtdProcessos, heuristica2);

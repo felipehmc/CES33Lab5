@@ -72,7 +72,7 @@ public class SimuladorEmissor {
 	public static void main(String[] args){
 		int qtdCPUS = 4;
 		int TMT = 30;
-		int qtdProcessos = 40;
+		int qtdProcessos = 20;
 		int LIM_CLOCKS_OCIOSOS = 5;
 		int RETRY = 5;
 		
