@@ -4,19 +4,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class HEmissor extends Heuristica{
-
-	public int processosEmExecucao;
-	int retry;
-	final int limiteClocksOciosos;
-	IMetrica metrica;
+	
 	Random random = new Random();
 	
-	ArrayList <CPU> cpus = new ArrayList<CPU>();
-	
-	HEmissor(int _limiteClocksOciosos, IMetrica _metrica, int _retry){
-		limiteClocksOciosos = _limiteClocksOciosos;
-		metrica = _metrica;
-		retry = _retry;
+	HEmissor(int _limiteClocksOciosos, IMetrica _metrica, int _retry, ArrayList <CPU> _cpus){
+		super(_limiteClocksOciosos,_metrica,_retry,_cpus);
 	}
 	
 	public int geraNumeroAleatorio(int num){
@@ -27,32 +19,39 @@ public class HEmissor extends Heuristica{
 		return numGerado;
 	}
 	
-	public void clock(){
-		boolean[] terminouProcesso = new boolean[cpus.size()];
+	public int clock(){
+		boolean[] novoProcesso = new boolean[cpus.size()];
 		for(int i = 0; i < cpus.size(); i++){
-			terminouProcesso[i] = cpus.get(i).executaClock();
+			novoProcesso[i] = cpus.get(i).executaClock();
+			if(novoProcesso[i]) processosEmExecucao--;
 		}
 		for(int i = 0; i < cpus.size(); i++){
-			if(terminouProcesso[i] || cpus.get(i).clocksOciosos >= limiteClocksOciosos){
-				heuristicaDoReceptor(cpus.get(i), metrica);
+			if(novoProcesso[i] || cpus.get(i).clocksOciosos >= limiteClocksOciosos){
+				heuristicaDoEmissor(cpus.get(i), metrica);
 			}
 		}
+		return ++currentClock;
 	}
 		
-	public void heuristicaDoReceptor(CPU node, IMetrica metrica){
-		if(!metrica.estaSobrecarregado(node,processosEmExecucao)){
+	public void heuristicaDoEmissor(CPU cpu, IMetrica metrica){
+		//if(!metrica.estaSobrecarregado(cpu,processosEmExecucao)){
 			int tentativas = 0;
 			while(tentativas < retry){
-				int randomCPU = geraNumeroAleatorio(node.getID());
-				CPU randomNode = cpus.get(randomCPU);
-				if(metrica.estaSobrecarregado(randomNode,processosEmExecucao)&& randomNode.quantidadeProcessos() > 1){
-					Processo p = randomNode.ultimoProcesso();
-					node.addProcesso(p);
+				tentativas++;
+				int randomCPUindex = geraNumeroAleatorio(cpu.getID());
+				CPU randomCPU = cpus.get(randomCPUindex);
+				randomCPU.sondagensRecebidas++;
+				//if(metrica.estaSobrecarregado(randomCPU,processosEmExecucao)&& randomCPU.quantidadeProcessos() > 1){
+				if(randomCPU.quantidadeProcessos()>1){	
+					Processo p = randomCPU.ultimoProcesso();
+					cpu.addProcesso(p);
+					
 					break;
 				}
-				tentativas++;
 			}
-		}
-		node.clocksOciosos = 0;
+			cpu.sondagensTransmitidas += tentativas;
+		//}
+		cpu.clocksOciosos = 0;
 	}
 }
+

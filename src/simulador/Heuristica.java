@@ -16,5 +16,8 @@ public abstract class Heuristica {
 		retry = _retry;
 		cpus = _cpus;
 		processosEmExecucao = 0;
+		currentClock = 0;
 	}
+	
+	protected abstract int clock();
 }

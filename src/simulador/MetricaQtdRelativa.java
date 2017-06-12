@@ -9,7 +9,7 @@ public class MetricaQtdRelativa implements IMetrica{
 	}
 	
 	public boolean estaSobrecarregado(CPU cpu, int processosEmExecucao){
-		if(cpu.taxaMediaDeUtilizacao() > limite)
+		if((double)cpu.quantidadeProcessos()/processosEmExecucao > limite)
 			return true;
 		return false;
 	}

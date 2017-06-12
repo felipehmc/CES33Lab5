@@ -23,6 +23,7 @@ public class HReceptor extends Heuristica{
 		boolean[] terminouProcesso = new boolean[cpus.size()];
 		for(int i = 0; i < cpus.size(); i++){
 			terminouProcesso[i] = cpus.get(i).executaClock();
+			if(terminouProcesso[i]) processosEmExecucao--;
 		}
 		for(int i = 0; i < cpus.size(); i++){
 			if(terminouProcesso[i] || cpus.get(i).clocksOciosos >= limiteClocksOciosos){
@@ -32,20 +33,24 @@ public class HReceptor extends Heuristica{
 		return ++currentClock;
 	}
 		
-	public void heuristicaDoReceptor(CPU node, IMetrica metrica){
-		if(!metrica.estaSobrecarregado(node,processosEmExecucao)){
+	public void heuristicaDoReceptor(CPU cpu, IMetrica metrica){
+		if(!metrica.estaSobrecarregado(cpu,processosEmExecucao)){
 			int tentativas = 0;
 			while(tentativas < retry){
-				int randomCPU = geraNumeroAleatorio(node.getID());
-				CPU randomNode = cpus.get(randomCPU);
-				if(metrica.estaSobrecarregado(randomNode,processosEmExecucao)&& randomNode.quantidadeProcessos() > 1){
-					Processo p = randomNode.ultimoProcesso();
-					node.addProcesso(p);
+				tentativas++;
+				int randomCPUindex = geraNumeroAleatorio(cpu.getID());
+				CPU randomCPU = cpus.get(randomCPUindex);
+				randomCPU.sondagensRecebidas++;
+				//if(metrica.estaSobrecarregado(randomCPU,processosEmExecucao)&& randomCPU.quantidadeProcessos() > 1){
+				if(randomCPU.quantidadeProcessos()>1){	
+					Processo p = randomCPU.ultimoProcesso();
+					cpu.addProcesso(p);
+					//randomCPU.sondagensRecebidas++; 
 					break;
 				}
-				tentativas++;
 			}
+			cpu.sondagensTransmitidas += tentativas;
 		}
-		node.clocksOciosos = 0;
+		cpu.clocksOciosos = 0;
 	}
 }

@@ -8,6 +8,8 @@ public class CPU {
 	private final int id;
 	private int tempoRestanteTotal;
 	public int clocksOciosos = 0; // Mede o tempo de ociosidade
+	public int sondagensTransmitidas = 0;
+	public int sondagensRecebidas = 0;
 	
 	CPU(int id){
 		this.id = id;
@@ -15,9 +17,10 @@ public class CPU {
 		processos = new ArrayList <Processo>();
 	}
 	
-	public void criaNovoProcesso(int currentClock, int clocksDuracao){
+	public boolean criaNovoProcesso(int currentClock, int clocksDuracao){
 		Processo p = new Processo(this.id, currentClock, clocksDuracao);
 		addProcesso(p);
+		return true;
 	}
 	
 	public double taxaMediaDeUtilizacao(){
@@ -53,8 +56,9 @@ public class CPU {
 			//Se o processo terminou de ser executado,
 			//ele eh retirado da lista de processos
 			clocksOciosos = 0;
-			if(tempoRestanteTotal > 0)
+			if(tempoRestanteTotal > 0){
 				tempoRestanteTotal--;
+			}
 			if(processos.get(0).clock()){
 				processos.remove(0);
 				return true; // retorna true quando o processo eh finalizado
