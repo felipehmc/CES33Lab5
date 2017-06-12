@@ -1,9 +1,10 @@
 package simulador;
 
 public class MetricaQtdProcessos implements IMetrica {
+	
 	private final int limite;
 	
-	MetricaQtdProcessos(int _limite){
+	public MetricaQtdProcessos(int _limite){
 		limite = _limite;
 	}
 	

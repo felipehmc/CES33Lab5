@@ -1,14 +1,20 @@
-package simulador;
+package simulador2;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Simulador {
+import simulador.CPU;
+import simulador.HReceptor;
+import simulador.Heuristica;
+import simulador.MetricaQtdProcessos;
+
+public class SimuladorEmissor {
 	int DURATION = 100;
 	int TMT;
 	int amount;
 	int qtdCPUS;
 	Heuristica heuristica;
+	
 	Random random = new Random();
 	
 	public int geraNumeroAleatorio(int num){
@@ -32,7 +38,7 @@ public class Simulador {
 		return indices_cpus_para_novos_processos;
 	}
 	
-	Simulador(int _qtdCPUS ,int _TMT, int _qtdProcessos, Heuristica _heuristica){
+	SimuladorEmissor(int _qtdCPUS ,int _TMT, int _qtdProcessos, Heuristica _heuristica){
 		TMT = _TMT;
 		amount = _qtdProcessos;
 		qtdCPUS = _qtdCPUS; 
@@ -48,13 +54,13 @@ public class Simulador {
 	}
 	
 	void simulador(int _amount){
-		
 		while(heuristica.currentClock <= DURATION){
 			if(heuristica.currentClock % TMT == 0){
 				int [] temposAleatorios = gerarTemposAleatoriosMediaTMT(_amount);
 				int [] cpuAleatorias = gerarCPUSAleatorias(_amount);
 				for(int i = 0; i < _amount; i++){
 					heuristica.cpus.get(cpuAleatorias[i]).criaNovoProcesso(heuristica.currentClock, temposAleatorios[i]);
+					heuristica.cpus.get(cpuAleatorias[i]).criouNovoProcesso = true;
 					//System.out.println("Gerou processo de "+ temposAleatorios[i] + " em CPU " + cpuAleatorias[i]);
 					heuristica.processosEmExecucao++;
 				}
@@ -66,7 +72,7 @@ public class Simulador {
 	public static void main(String[] args){
 		int qtdCPUS = 4;
 		int TMT = 30;
-		int qtdProcessos = 20;
+		int qtdProcessos = 40;
 		int LIM_CLOCKS_OCIOSOS = 5;
 		int RETRY = 5;
 		
@@ -75,8 +81,8 @@ public class Simulador {
 			multiprocessadores.add(i, new CPU(i));
 		}
 		
-		Heuristica heuristica = new HReceptor(LIM_CLOCKS_OCIOSOS, new MetricaQtdProcessos(5), RETRY, multiprocessadores); 
-		Simulador sim = new Simulador(qtdCPUS, TMT, qtdProcessos, heuristica);
+		Heuristica heuristica = new HEmissor(LIM_CLOCKS_OCIOSOS, new MetricaQtdProcessos(5), RETRY, multiprocessadores); 
+		SimuladorEmissor sim = new SimuladorEmissor(qtdCPUS, TMT, qtdProcessos, heuristica);
 		
 		//Heuristica heuristica2 = new HReceptor(LIM_CLOCKS_OCIOSOS, new MetricaTempoMedio(60), RETRY, multiprocessadores); 
 		//Simulador sim = new Simulador(qtdCPUS, TMT, qtdProcessos, heuristica2);

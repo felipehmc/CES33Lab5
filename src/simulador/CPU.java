@@ -10,17 +10,18 @@ public class CPU {
 	public int clocksOciosos = 0; // Mede o tempo de ociosidade
 	public int sondagensTransmitidas = 0;
 	public int sondagensRecebidas = 0;
+	public boolean criouNovoProcesso = false;
 	
-	CPU(int id){
+	public CPU(int id){
 		this.id = id;
 		tempoRestanteTotal = 0;
 		processos = new ArrayList <Processo>();
 	}
 	
-	public boolean criaNovoProcesso(int currentClock, int clocksDuracao){
+	public void criaNovoProcesso(int currentClock, int clocksDuracao){
 		Processo p = new Processo(this.id, currentClock, clocksDuracao);
 		addProcesso(p);
-		return true;
+		criouNovoProcesso = true;
 	}
 	
 	public double taxaMediaDeUtilizacao(){
@@ -67,4 +68,5 @@ public class CPU {
 		clocksOciosos++;
 		return false;
 	}
+
 }

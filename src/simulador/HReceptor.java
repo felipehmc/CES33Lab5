@@ -7,7 +7,7 @@ public class HReceptor extends Heuristica{
 	
 	Random random = new Random();
 	
-	HReceptor(int _limiteClocksOciosos, IMetrica _metrica, int _retry, ArrayList <CPU> _cpus){
+	public HReceptor(int _limiteClocksOciosos, IMetrica _metrica, int _retry, ArrayList <CPU> _cpus){
 		super(_limiteClocksOciosos,_metrica,_retry,_cpus);
 	}
 	
