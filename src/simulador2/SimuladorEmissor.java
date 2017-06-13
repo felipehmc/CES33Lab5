@@ -70,19 +70,19 @@ public class SimuladorEmissor {
 	}
 	
 	public static void main(String[] args){
-		int qtdCPUS = 4;
+		int N = 4;
 		int TMT = 15;
 		int qtdProcessos = 10;
 		int LIM_CLOCKS_OCIOSOS = 5;
 		int RETRY = 5;
 		
 		ArrayList <CPU> multiprocessadores = new ArrayList<CPU>();
-		for(int i = 0; i < qtdCPUS; i++){
+		for(int i = 0; i < N; i++){
 			multiprocessadores.add(i, new CPU(i));
 		}
 		
 		Heuristica heuristica = new HEmissor(LIM_CLOCKS_OCIOSOS, new MetricaQtdProcessos(5), RETRY, multiprocessadores); 
-		SimuladorEmissor sim = new SimuladorEmissor(qtdCPUS, TMT, qtdProcessos, heuristica);
+		SimuladorEmissor sim = new SimuladorEmissor(N, TMT, qtdProcessos, heuristica);
 		
 		//Heuristica heuristica2 = new HReceptor(LIM_CLOCKS_OCIOSOS, new MetricaTempoMedio(60), RETRY, multiprocessadores); 
 		//Simulador sim = new Simulador(qtdCPUS, TMT, qtdProcessos, heuristica2);
@@ -92,7 +92,7 @@ public class SimuladorEmissor {
 		
 		int sumRec = 0;
 		int sumTra = 0;
-		for(int i = 0; i < qtdCPUS; i++){
+		for(int i = 0; i < N; i++){
 			CPU c = multiprocessadores.get(i);
 			System.out.println("CPU: " + i + " Trans: "+ c.sondagensTransmitidas + " / Rece: " + c.sondagensRecebidas);
 			sumRec+=c.sondagensRecebidas;
